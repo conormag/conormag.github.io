@@ -1,489 +1,807 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Agents Agents Agents: the enterprise keynote remix</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
-<style>
-  :root {
-    --stage: #1B3FD6;        /* keynote blue */
-    --stage-deep: #0B1F7A;   /* backdrop shadow */
-    --spot: #FFD84A;         /* stage-light yellow */
-    --ink: #FFFFFF;
-    --shirt: #BFD3F7;        /* the pale blue of a soaked dress shirt */
-    --alarm: #FF6A57;
-    --bar: rgba(5, 14, 58, 0.55);
-    box-sizing: border-box;
-    padding-top: env(safe-area-inset-top, 0px);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Agents Agents Agents: the enterprise keynote remix</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+  <style>
+    :root {
+      --stage: #1B3FD6;
+      /* keynote blue */
+      --stage-deep: #0B1F7A;
+      /* backdrop shadow */
+      --spot: #FFD84A;
+      /* stage-light yellow */
+      --ink: #FFFFFF;
+      --shirt: #BFD3F7;
+      /* the pale blue of a soaked dress shirt */
+      --alarm: #FF6A57;
+      --bar: rgba(5, 14, 58, 0.55);
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        color-scheme: dark;
+        --stage: #0F2386;
+        --stage-deep: #050E3A;
+        --bar: rgba(2, 6, 28, 0.6);
+      }
+    }
+
+    :root[data-theme="dark"] {
       color-scheme: dark;
       --stage: #0F2386;
       --stage-deep: #050E3A;
       --bar: rgba(2, 6, 28, 0.6);
     }
-  }
-  :root[data-theme="dark"] {
-    color-scheme: dark;
-    --stage: #0F2386;
-    --stage-deep: #050E3A;
-    --bar: rgba(2, 6, 28, 0.6);
-  }
 
-  *, *::before, *::after { box-sizing: inherit; }
-  html { height: 100%; scroll-padding-top: env(safe-area-inset-top, 0px); }
-  body {
-    height: 100%;
-    margin: 0;
-    background: var(--stage-deep);
-    color: var(--ink);
-    font-family: "Archivo", "Arial Narrow", Arial, sans-serif;
-    font-size: 1rem;
-    line-height: 1.4;
-    overflow: hidden;
-  }
-
-  .hall {
-    height: 100%;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    background:
-      radial-gradient(ellipse 70% 55% at 50% 42%, var(--stage) 0%, var(--stage-deep) 100%);
-  }
-
-  /* Programme line, top of the hall */
-  .programme {
-    padding: 1rem 1.25rem 0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 0.25rem 1.5rem;
-    color: var(--shirt);
-  }
-  .programme h1 {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 700;
-    font-stretch: 110%;
-    letter-spacing: 0.01em;
-    color: var(--ink);
-  }
-  .programme p { margin: 0; font-size: 0.875rem; }
-
-  /* The stage: one enormous word at a time */
-  .stage {
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 0 4vw;
-    overflow: hidden;
-  }
-  .word {
-    margin: 0;
-    font-weight: 900;
-    font-variation-settings: "wdth" 80;
-    line-height: 0.92;
-    letter-spacing: -0.015em;
-    white-space: nowrap;
-    max-width: 92vw;
-    text-wrap: balance;
-    min-height: 1em;
-  }
-  .word.wrap { white-space: normal; }
-  .word.shout   { color: var(--ink); text-transform: uppercase; }
-  .word.whisper { color: var(--shirt); font-weight: 300; font-style: italic; letter-spacing: 0; }
-  .word.robot   { color: var(--spot); font-weight: 500; font-variation-settings: "wdth" 62; letter-spacing: 0; }
-  .word.error   { color: var(--alarm); font-weight: 600; font-variation-settings: "wdth" 62; letter-spacing: 0; }
-  .word.ballad  { color: var(--ink); font-weight: 200; font-style: italic; letter-spacing: 0; }
-
-  .direction {
-    margin: 1.5rem 0 0;
-    min-height: 3em;
-    max-width: 34rem;
-    font-size: clamp(0.95rem, 1.6vw, 1.15rem);
-    font-style: italic;
-    font-weight: 400;
-    color: var(--shirt);
-  }
-
-  /* Lower third: controls and the two numbers that matter */
-  .lower {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem 1.5rem;
-    padding: 0.9rem 1.25rem;
-    background: var(--bar);
-    border-top: 3px solid var(--spot);
-  }
-  .controls { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; }
-  button {
-    font: inherit;
-    font-weight: 800;
-    font-stretch: 110%;
-    font-size: 1rem;
-    color: var(--stage-deep);
-    background: var(--spot);
-    border: 0;
-    border-radius: 2px;
-    padding: 0.7rem 1.2rem;
-    cursor: pointer;
-  }
-  button:hover { filter: brightness(1.08); }
-  button:focus-visible, input:focus-visible {
-    outline: 3px solid var(--ink);
-    outline-offset: 3px;
-  }
-  label { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.95rem; cursor: pointer; }
-  input[type="checkbox"] { width: 1.1rem; height: 1.1rem; accent-color: var(--spot); }
-
-  .meters { display: flex; gap: 1.75rem; margin: 0; }
-  .meters div { display: flex; flex-direction: column; }
-  .meters dt { font-size: 0.8rem; color: var(--shirt); }
-  .meters dd {
-    margin: 0;
-    font-size: 1.35rem;
-    font-weight: 800;
-    font-variant-numeric: tabular-nums;
-    font-stretch: 90%;
-  }
-  .notice { flex-basis: 100%; margin: 0; font-size: 0.875rem; color: var(--spot); }
-  .notice:empty { display: none; }
-</style>
-</head>
-<body>
-<div class="hall">
-  <header class="programme">
-    <h1>Agents Agents Agents</h1>
-    <p>The enterprise keynote remix, performed live by your browser</p>
-  </header>
-
-  <main class="stage">
-    <p class="word shout" id="word" style="font-size:min(34vh, 17vw)">Agents</p>
-    <p class="direction" id="direction">The house lights are down. A man in a pale blue shirt is breathing heavily in the wings.</p>
-  </main>
-
-  <footer class="lower">
-    <div class="controls">
-      <button id="go" type="button">Start the keynote</button>
-      <label><input type="checkbox" id="voice" checked> Robot vocals</label>
-    </div>
-    <dl class="meters">
-      <div><dt>Tokens burned</dt><dd id="tokens">0</dd></div>
-      <div><dt>Sweat</dt><dd id="sweat">0%</dd></div>
-    </dl>
-    <p class="notice" id="notice" role="status"></p>
-  </footer>
-</div>
-
-<script>
-(function () {
-  "use strict";
-
-  var BPM = 128;
-  var BEAT = 60 / BPM;
-
-  var wordEl = document.getElementById("word");
-  var dirEl = document.getElementById("direction");
-  var goBtn = document.getElementById("go");
-  var voiceBox = document.getElementById("voice");
-  var tokensEl = document.getElementById("tokens");
-  var sweatEl = document.getElementById("sweat");
-  var noticeEl = document.getElementById("notice");
-
-  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var synth = ("speechSynthesis" in window) ? window.speechSynthesis : null;
-
-  var RESTING_NOTE = "The house lights are down. A man in a pale blue shirt is breathing heavily in the wings.";
-
-  /* Voices: pitch, rate, volume for the speech synthesiser */
-  var V = {
-    shout:   { pitch: 1.3, rate: 1.5, volume: 1 },
-    whisper: { pitch: 0.8, rate: 1.1, volume: 0.45 },
-    robot:   { pitch: 0.1, rate: 0.9, volume: 1 },
-    ballad:  { pitch: 0.7, rate: 0.75, volume: 0.9 },
-    lost:    { pitch: 1.6, rate: 0.9, volume: 0.7 },
-    finance: { pitch: 0.6, rate: 0.8, volume: 0.5 }
-  };
-
-  function rep(text, n) { var a = []; for (var i = 0; i < n; i++) a.push(text); return a; }
-
-  /* The set list. beats = length; words are spread evenly across it. */
-  var SONG = [
-    { beats: 2, words: ["Agents!"], say: "Agents!", voice: V.shout, style: "shout", groove: "none",
-      note: "A sweat-drenched executive bounds on stage. The sweat is real. The demo is not." },
-    { beats: 2, words: ["Agents!"], say: "Agents!", voice: V.shout, style: "shout", groove: "none" },
-    { beats: 2, words: ["Agents!"], say: "Agents!", voice: V.shout, style: "shout", groove: "none" },
-    { beats: 2, words: ["Agents!"], say: "Agents!", voice: V.shout, style: "shout", groove: "none" },
-    { beats: 2, words: [""], groove: "none", note: "Beat drops. Somewhere, a GPU catches fire." },
-
-    /* Verse 1 */
-    { beats: 4, words: rep("Agents", 4), say: "Agents, agents, agents, agents!", voice: V.shout, style: "shout", groove: "full", note: "" },
-    { beats: 4, words: rep("Agents", 4), say: "Agents, agents, agents, agents!", voice: V.shout, style: "shout", groove: "full" },
-    { beats: 4, words: rep("Agents", 4), say: "Agents, agents, agents, agents!", voice: V.shout, style: "shout", groove: "full" },
-    { beats: 4, words: ["…with a human in the loop"], say: "with a human in the loop", voice: V.whisper, style: "whisper", groove: "hats",
-      note: "Whispered, for the benefit of Legal." },
-
-    /* Breakdown */
-    { beats: 4, words: rep("Tool call.", 4), say: "Tool call. Tool call. Tool call. Tool call.", voice: V.shout, style: "shout", groove: "full", note: "" },
-    { beats: 4, words: rep("Retry.", 4), say: "Retry. Retry. Retry. Retry.", voice: V.shout, style: "shout", groove: "full" },
-    { beats: 8, words: ["“You’re absolutely right. I apologise for deleting prod.”"],
-      say: "You're absolutely right. I apologise for deleting prod.", voice: V.robot, style: "robot", groove: "hats",
-      note: "Robot voice. Cheerful. Unbothered." },
-
-    /* Verse 2 */
-    { beats: 4, words: rep("Agents", 4), say: "Agents, agents, agents, agents!", voice: V.shout, style: "shout", groove: "full", note: "" },
-    { beats: 4, words: rep("Sub-agents", 4), say: "Sub-agents, sub-agents, sub-agents, sub-agents!", voice: V.shout, style: "shout", groove: "full" },
-    { beats: 8, words: ["Agents", "managing", "agents", "managing", "agents", "managing", "agents", "managing"],
-      say: "Agents managing agents managing agents managing agents managing", voice: V.shout, style: "shout", groove: "full" },
-    { beats: 4, words: ["Nobody knows who’s managing those agents"], say: "Nobody knows who's managing those agents", voice: V.whisper, style: "whisper", groove: "hats",
-      note: "An org chart is displayed. It is a circle." },
-
-    /* Bridge */
-    { beats: 8, words: ["It was a cron job…"], say: "It was a cron job.", voice: V.ballad, style: "ballad", groove: "pad", chord: ["A3", "C4", "E4"],
-      note: "Slow. Emotional. A single spotlight." },
-    { beats: 8, words: ["It was always a cron job…"], say: "It was always a cron job.", voice: V.ballad, style: "ballad", groove: "pad", chord: ["F3", "A3", "C4"] },
-    { beats: 8, words: ["But we gave it a system prompt"], say: "But we gave it a system prompt", voice: V.ballad, style: "ballad", groove: "pad", chord: ["C3", "E3", "G3"] },
-    { beats: 8, words: ["and a Series B"], say: "and a Series B.", voice: V.ballad, style: "ballad", groove: "pad", chord: ["G3", "B3", "D4"],
-      note: "Someone in row three is openly weeping. They are an investor." },
-
-    /* Drop */
-    { beats: 4, words: rep("Tokens!", 4), say: "Tokens! Tokens! Tokens! Tokens!", voice: V.shout, style: "shout", groove: "full", note: "" },
-    { beats: 4, words: ["Context!", "Context!", "Context!", { t: "[window exceeded]", style: "error" }],
-      say: "Context! Context! Context!", voice: V.shout, style: "shout", groove: "full" },
-    { beats: 4, words: ["Con…", "Con…", "Con…", { t: "[compacting conversation]", style: "error" }],
-      say: "Con. Con. Con.", voice: V.shout, style: "shout", groove: "hats" },
-    { beats: 8, words: ["Who are you?", "What were we doing?"], say: "Who are you? What were we doing?", voice: V.lost, style: "whisper", groove: "none",
-      note: "The executive stares at his own hands." },
-    { beats: 4, words: ["Agents!"], say: "Agents!", voice: V.shout, style: "shout", groove: "full", note: "It comes back to him." },
-
-    /* Outro */
-    { beats: 4, words: rep("Agents", 4), say: "Agents, agents, agents, agents!", voice: V.shout, style: "shout", groove: "full",
-      note: "Executive now horizontal. Still clapping." },
-    { beats: 4, words: rep("Agents", 4), say: "Agents, agents, agents, agents!", voice: V.shout, style: "shout", groove: "full" },
-    { beats: 8, words: ["Invoices.", "Invoices.", "Invoices.", ""], say: "Invoices. Invoices. Invoices.", voice: V.finance, style: "whisper", groove: "hats",
-      note: "Finance, from the back." },
-    { beats: 6, words: ["Any questions?"], say: "Any questions?", voice: V.robot, style: "robot", groove: "none",
-      note: "Demo fails. Standing ovation anyway." }
-  ];
-
-  var TOTAL_BEATS = SONG.reduce(function (n, s) { return n + s.beats; }, 0);
-
-  /* ---------- Stage visuals ---------- */
-
-  function fitSize(text) {
-    var n = Math.max(text.length, 4);
-    if (n <= 14) return { size: "min(34vh, " + (88 / (n * 0.74)).toFixed(2) + "vw)", wrap: false };
-    var lines = n > 40 ? 3 : 2;
-    var per = Math.ceil(n / lines) + 2;
-    return { size: "min(" + (lines === 3 ? 15 : 20) + "vh, " + (88 / (per * 0.6)).toFixed(2) + "vw)", wrap: true };
-  }
-
-  function showWord(text, style) {
-    var fit = fitSize(text);
-    wordEl.className = "word " + style + (fit.wrap ? " wrap" : "");
-    wordEl.style.fontSize = fit.size;
-    wordEl.textContent = text;
-    if (!text || reduceMotion || !wordEl.animate) return;
-    if (style === "shout") {
-      /* The word lands wide and gets squeezed back, like a shirt collar. */
-      wordEl.animate(
-        [{ fontVariationSettings: '"wdth" 118', transform: "scale(1.05)" },
-         { fontVariationSettings: '"wdth" 80', transform: "scale(1)" }],
-        { duration: 260, easing: "cubic-bezier(.2,.8,.2,1)" }
-      );
-    } else {
-      wordEl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: "ease-out" });
+    *,
+    *::before,
+    *::after {
+      box-sizing: inherit;
     }
-  }
 
-  function setNote(text) { dirEl.textContent = text; }
+    html {
+      height: 100%;
+      scroll-padding-top: env(safe-area-inset-top, 0px);
+    }
 
-  /* ---------- Vocals ---------- */
+    body {
+      height: 100%;
+      margin: 0;
+      background: var(--stage-deep);
+      color: var(--ink);
+      font-family: "Archivo", "Arial Narrow", Arial, sans-serif;
+      font-size: 1rem;
+      line-height: 1.4;
+      overflow: hidden;
+    }
 
-  var englishVoice = null;
-  function pickVoice() {
-    if (!synth) return;
-    var voices = synth.getVoices() || [];
-    englishVoice = voices.filter(function (v) { return /^en/i.test(v.lang); })[0] || null;
-  }
-  if (synth) {
-    pickVoice();
-    if (typeof synth.addEventListener === "function") synth.addEventListener("voiceschanged", pickVoice);
-  }
+    .hall {
+      height: 100%;
+      display: grid;
+      grid-template-rows: auto 1fr auto auto;
+      background:
+        radial-gradient(ellipse 70% 55% at 50% 42%, var(--stage) 0%, var(--stage-deep) 100%);
+    }
 
-  function say(text, voice) {
-    if (!synth || !voiceBox.checked || !text) return;
-    try {
-      if (synth.speaking || synth.pending) synth.cancel();
-      var u = new SpeechSynthesisUtterance(text);
-      if (englishVoice) u.voice = englishVoice;
-      u.lang = "en-US";
-      u.pitch = voice.pitch;
-      u.rate = voice.rate;
-      u.volume = voice.volume;
-      synth.speak(u);
-    } catch (e) { /* the page carries on as a silent film */ }
-  }
+    /* Programme line, top of the hall */
+    .programme {
+      padding: 1rem 1.25rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.25rem 1.5rem;
+      color: var(--shirt);
+    }
 
-  /* ---------- The band ---------- */
+    .programme h1 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+      font-stretch: 110%;
+      letter-spacing: 0.01em;
+      color: var(--ink);
+    }
 
-  var band = null;
-  function buildBand() {
-    if (band) return band;
-    var master = new Tone.Volume(-6).toDestination();
-    var kick = new Tone.MembraneSynth({ pitchDecay: 0.04, octaves: 6, envelope: { attack: 0.001, decay: 0.32, sustain: 0 } }).connect(master);
-    var hatFilter = new Tone.Filter(7500, "highpass").connect(master);
-    var hat = new Tone.NoiseSynth({ noise: { type: "white" }, envelope: { attack: 0.001, decay: 0.05, sustain: 0 }, volume: -14 }).connect(hatFilter);
-    var clapFilter = new Tone.Filter(1600, "bandpass").connect(master);
-    var clap = new Tone.NoiseSynth({ noise: { type: "pink" }, envelope: { attack: 0.002, decay: 0.16, sustain: 0 }, volume: -6 }).connect(clapFilter);
-    var bass = new Tone.MonoSynth({
-      oscillator: { type: "sawtooth" },
-      filter: { Q: 2, type: "lowpass" },
-      envelope: { attack: 0.005, decay: 0.12, sustain: 0.2, release: 0.05 },
-      filterEnvelope: { attack: 0.005, decay: 0.1, sustain: 0.2, baseFrequency: 90, octaves: 2.5 },
-      volume: -10
-    }).connect(master);
-    var pad = new Tone.PolySynth(Tone.Synth, {
-      oscillator: { type: "triangle" },
-      envelope: { attack: 0.6, decay: 0.4, sustain: 0.7, release: 1.2 },
-      volume: -12
-    }).connect(master);
-    band = { kick: kick, hat: hat, clap: clap, bass: bass, pad: pad };
-    return band;
-  }
+    .programme p {
+      margin: 0;
+      font-size: 0.875rem;
+    }
 
-  /* ---------- Running the show ---------- */
+    /* The stage: one enormous word at a time */
+    .stage {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 4vw;
+      overflow: hidden;
+    }
 
-  var playing = false;
-  var groove = "none";
-  var tokens = 0;
+    .word {
+      margin: 0;
+      font-weight: 900;
+      font-variation-settings: "wdth" 80;
+      line-height: 0.92;
+      letter-spacing: -0.015em;
+      white-space: nowrap;
+      max-width: 92vw;
+      text-wrap: balance;
+      min-height: 1em;
+    }
 
-  function resetStage(note) {
-    groove = "none";
-    showWord("Agents", "shout");
-    setNote(note);
-    goBtn.textContent = "Start the keynote";
-    playing = false;
-  }
+    .word.wrap {
+      white-space: normal;
+    }
 
-  function stopShow(note) {
-    Tone.Transport.stop();
-    Tone.Transport.cancel();
-    if (band) band.pad.releaseAll();
-    if (synth) { try { synth.cancel(); } catch (e) {} }
-    resetStage(note);
-  }
+    .word.shout {
+      color: var(--ink);
+      text-transform: uppercase;
+    }
 
-  function startShow() {
-    var b = buildBand();
-    Tone.Transport.cancel();
-    Tone.Transport.bpm.value = BPM;
-    tokens = 0;
-    tokensEl.textContent = "0";
-    sweatEl.textContent = "0%";
-    groove = "none";
-    var eighth = 0;
+    .word.whisper {
+      color: var(--shirt);
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0;
+    }
 
-    /* Drum machine: one tick per eighth note, plays whatever the groove says */
-    Tone.Transport.scheduleRepeat(function (time) {
-      var i = eighth++;
-      var onBeat = i % 2 === 0;
-      if (groove === "full") {
-        if (onBeat) b.kick.triggerAttackRelease("C1", "8n", time);
-        else {
-          b.hat.triggerAttackRelease("32n", time);
-          b.bass.triggerAttackRelease(i % 16 >= 12 ? "G1" : "A1", "16n", time);
-        }
-        if (i % 8 === 2 || i % 8 === 6) b.clap.triggerAttackRelease("16n", time);
-      } else if (groove === "hats") {
-        b.hat.triggerAttackRelease("32n", time, onBeat ? 0.9 : 0.4);
+    .word.robot {
+      color: var(--spot);
+      font-weight: 500;
+      font-variation-settings: "wdth" 62;
+      letter-spacing: 0;
+    }
+
+    .word.error {
+      color: var(--alarm);
+      font-weight: 600;
+      font-variation-settings: "wdth" 62;
+      letter-spacing: 0;
+    }
+
+    .word.ballad {
+      color: var(--ink);
+      font-weight: 200;
+      font-style: italic;
+      letter-spacing: 0;
+    }
+
+    .direction {
+      margin: 1.5rem 0 0;
+      min-height: 3em;
+      max-width: 34rem;
+      font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+      font-style: italic;
+      font-weight: 400;
+      color: var(--shirt);
+    }
+
+    /* Stage floor: one executive, and however many agents the budget allows */
+    .floor {
+      display: flex;
+      align-items: flex-end;
+      gap: 1rem;
+      height: clamp(64px, 15vh, 130px);
+      padding: 0 1.25rem;
+      overflow: hidden;
+    }
+
+    .exec {
+      flex: 0 0 auto;
+      height: 100%;
+      aspect-ratio: 60 / 100;
+      transform-origin: 50% 80%;
+      transition: transform 0.35s ease-in;
+    }
+
+    .exec.down {
+      transform: rotate(90deg);
+    }
+
+    .exec svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .crowd {
+      flex: 1 1 auto;
+      min-width: 0;
+      height: 70%;
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      color: var(--spot);
+    }
+
+    .agent {
+      flex: 0 1 40px;
+      min-width: 0;
+    }
+
+    .agent svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .crowd.asleep {
+      opacity: 0.4;
+    }
+
+    .crowd.panic {
+      color: var(--alarm);
+    }
+
+    .crowd.lost .agent {
+      transform: rotate(18deg);
+      opacity: 0.75;
+    }
+
+    .crowd.busy .agent,
+    .crowd.panic .agent {
+      animation: wobble 0.23s ease-in-out infinite alternate;
+    }
+
+    .crowd.busy .agent:nth-child(even),
+    .crowd.panic .agent:nth-child(even) {
+      animation-direction: alternate-reverse;
+    }
+
+    @keyframes wobble {
+      from {
+        transform: rotate(-9deg);
       }
-      Tone.Draw.schedule(function () {
-        if (groove !== "none") {
-          tokens += 9000 + Math.floor(Math.random() * 42000);
-          tokensEl.textContent = tokens.toLocaleString("en-IE");
+
+      to {
+        transform: rotate(9deg);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .agent {
+        animation: none !important;
+      }
+
+      .exec {
+        transition: none;
+      }
+    }
+
+    /* Lower third: controls and the two numbers that matter */
+    .lower {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem 1.5rem;
+      padding: 0.9rem 1.25rem;
+      background: var(--bar);
+      border-top: 3px solid var(--spot);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      font: inherit;
+      font-weight: 800;
+      font-stretch: 110%;
+      font-size: 1rem;
+      color: var(--stage-deep);
+      background: var(--spot);
+      border: 0;
+      border-radius: 2px;
+      padding: 0.7rem 1.2rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      filter: brightness(1.08);
+    }
+
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid var(--ink);
+      outline-offset: 3px;
+    }
+
+    label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    input[type="checkbox"] {
+      width: 1.1rem;
+      height: 1.1rem;
+      accent-color: var(--spot);
+    }
+
+    .meters {
+      display: flex;
+      gap: 1.75rem;
+      margin: 0;
+    }
+
+    .meters div {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .meters dt {
+      font-size: 0.8rem;
+      color: var(--shirt);
+    }
+
+    .meters dd {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      font-stretch: 90%;
+    }
+
+    .notice {
+      flex-basis: 100%;
+      margin: 0;
+      font-size: 0.875rem;
+      color: var(--spot);
+    }
+
+    .notice:empty {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hall">
+    <header class="programme">
+      <h1>Agents Agents Agents</h1>
+      <p>The enterprise keynote remix, performed live by your browser</p>
+    </header>
+
+    <main class="stage">
+      <p class="word shout" id="word" style="font-size:min(34vh, 17vw)">Agents</p>
+      <p class="direction" id="direction">The house lights are down. A man in a pale blue shirt is breathing heavily in
+        the wings.</p>
+    </main>
+
+    <div class="floor" aria-hidden="true">
+      <div class="exec" id="exec">
+        <svg id="execBody" viewBox="0 0 60 100">
+          <line x1="20" y1="36" x2="6" y2="13" stroke="var(--shirt)" stroke-width="7" stroke-linecap="round" />
+          <line x1="40" y1="36" x2="54" y2="13" stroke="var(--shirt)" stroke-width="7" stroke-linecap="round" />
+          <line x1="25" y1="62" x2="22" y2="97" stroke="#CDBA88" stroke-width="8" stroke-linecap="round" />
+          <line x1="35" y1="62" x2="38" y2="97" stroke="#CDBA88" stroke-width="8" stroke-linecap="round" />
+          <rect x="18" y="29" width="24" height="36" rx="6" fill="var(--shirt)" />
+          <g id="patches" opacity="0" fill="#5E7FC4">
+            <ellipse cx="21" cy="42" rx="4" ry="8" />
+            <ellipse cx="39" cy="42" rx="4" ry="8" />
+            <ellipse cx="30" cy="50" rx="5" ry="9" />
+          </g>
+          <circle cx="30" cy="16" r="10" fill="var(--ink)" />
+          <ellipse cx="30" cy="20" rx="4" ry="3" fill="var(--stage-deep)" />
+        </svg>
+      </div>
+      <div class="crowd" id="crowd"></div>
+    </div>
+
+    <footer class="lower">
+      <div class="controls">
+        <button id="go" type="button">Start the keynote</button>
+        <label><input type="checkbox" id="voice" checked> Robot vocals</label>
+      </div>
+      <dl class="meters">
+        <div>
+          <dt>Tokens burned</dt>
+          <dd id="tokens">0</dd>
+        </div>
+        <div>
+          <dt>Sweat</dt>
+          <dd id="sweat">0%</dd>
+        </div>
+      </dl>
+      <p class="notice" id="notice" role="status"></p>
+    </footer>
+  </div>
+  <script data-goatcounter="https://conormag.goatcounter.com/count" async src="//gc.zgo.at/count.js">
+  </script>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var BPM = 128;
+      var BEAT = 60 / BPM;
+
+      var wordEl = document.getElementById("word");
+      var dirEl = document.getElementById("direction");
+      var goBtn = document.getElementById("go");
+      var voiceBox = document.getElementById("voice");
+      var tokensEl = document.getElementById("tokens");
+      var sweatEl = document.getElementById("sweat");
+      var noticeEl = document.getElementById("notice");
+
+      var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var synth = ("speechSynthesis" in window) ? window.speechSynthesis : null;
+
+      var RESTING_NOTE = "The house lights are down. A man in a pale blue shirt is breathing heavily in the wings.";
+
+      /* Voices: pitch, rate, volume for the speech synthesiser */
+      var V = {
+        shout: { pitch: 1.3, rate: 1.5, volume: 1 },
+        whisper: { pitch: 0.8, rate: 1.1, volume: 0.45 },
+        robot: { pitch: 0.1, rate: 0.9, volume: 1 },
+        ballad: { pitch: 0.7, rate: 0.75, volume: 0.9 },
+        lost: { pitch: 1.6, rate: 0.9, volume: 0.7 },
+        finance: { pitch: 0.6, rate: 0.8, volume: 0.5 }
+      };
+
+      function rep(text, n) { var a = []; for (var i = 0; i < n; i++) a.push(text); return a; }
+
+      /* The set list. beats = length; words are spread evenly across it. */
+      var SONG = [
+        {
+          beats: 2, words: ["Agents!"], say: "Agents!", voice: V.shout, style: "shout", groove: "none",
+          note: "A sweat-drenched executive bounds on stage. The sweat is real. The demo is not."
+        },
+        { beats: 2, words: ["Agents!"], say: "Agents!", voice: V.shout, style: "shout", groove: "none" },
+        { beats: 2, words: ["Agents!"], say: "Agents!", voice: V.shout, style: "shout", groove: "none" },
+        { beats: 2, words: ["Agents!"], say: "Agents!", voice: V.shout, style: "shout", groove: "none" },
+        { beats: 2, words: [""], groove: "none", note: "Beat drops. Somewhere, a GPU catches fire." },
+
+        /* Verse 1 */
+        { beats: 4, words: rep("Agents", 4), say: "Agents, agents, agents, agents!", voice: V.shout, style: "shout", groove: "full", note: "" },
+        { beats: 4, words: rep("Agents", 4), say: "Agents, agents, agents, agents!", voice: V.shout, style: "shout", groove: "full" },
+        { beats: 4, words: rep("Agents", 4), say: "Agents, agents, agents, agents!", voice: V.shout, style: "shout", groove: "full" },
+        {
+          beats: 4, words: ["…with a human in the loop"], say: "with a human in the loop", voice: V.whisper, style: "whisper", groove: "hats",
+          note: "Whispered, for the benefit of Legal."
+        },
+
+        /* Breakdown */
+        { beats: 4, words: rep("Tool call.", 4), say: "Tool call. Tool call. Tool call. Tool call.", voice: V.shout, style: "shout", groove: "full", note: "" },
+        { beats: 4, words: rep("Retry.", 4), say: "Retry. Retry. Retry. Retry.", voice: V.shout, style: "shout", groove: "full" },
+        {
+          beats: 8, words: ["“You’re absolutely right. I apologise for deleting prod.”"],
+          say: "You're absolutely right. I apologise for deleting prod.", voice: V.robot, style: "robot", groove: "hats",
+          note: "Robot voice. Cheerful. Unbothered."
+        },
+
+        /* Verse 2 */
+        { beats: 4, words: rep("Agents", 4), say: "Agents, agents, agents, agents!", voice: V.shout, style: "shout", groove: "full", note: "" },
+        { beats: 4, words: rep("Sub-agents", 4), say: "Sub-agents, sub-agents, sub-agents, sub-agents!", voice: V.shout, style: "shout", groove: "full" },
+        {
+          beats: 8, words: ["Agents", "managing", "agents", "managing", "agents", "managing", "agents", "managing"],
+          say: "Agents managing agents managing agents managing agents managing", voice: V.shout, style: "shout", groove: "full"
+        },
+        {
+          beats: 4, words: ["Nobody knows who’s managing those agents"], say: "Nobody knows who's managing those agents", voice: V.whisper, style: "whisper", groove: "hats",
+          note: "An org chart is displayed. It is a circle."
+        },
+
+        /* Bridge */
+        {
+          beats: 8, words: ["It was a cron job…"], say: "It was a cron job.", voice: V.ballad, style: "ballad", groove: "pad", chord: ["A3", "C4", "E4"],
+          note: "Slow. Emotional. A single spotlight."
+        },
+        { beats: 8, words: ["It was always a cron job…"], say: "It was always a cron job.", voice: V.ballad, style: "ballad", groove: "pad", chord: ["F3", "A3", "C4"] },
+        { beats: 8, words: ["But we gave it a system prompt"], say: "But we gave it a system prompt", voice: V.ballad, style: "ballad", groove: "pad", chord: ["C3", "E3", "G3"] },
+        {
+          beats: 8, words: ["and a Series B"], say: "and a Series B.", voice: V.ballad, style: "ballad", groove: "pad", chord: ["G3", "B3", "D4"],
+          note: "Someone in row three is openly weeping. They are an investor."
+        },
+
+        /* Drop */
+        { beats: 4, words: rep("Tokens!", 4), say: "Tokens! Tokens! Tokens! Tokens!", voice: V.shout, style: "shout", groove: "full", note: "" },
+        {
+          beats: 4, words: ["Context!", "Context!", "Context!", { t: "[window exceeded]", style: "error" }],
+          say: "Context! Context! Context!", voice: V.shout, style: "shout", groove: "full"
+        },
+        {
+          beats: 4, words: ["Con…", "Con…", "Con…", { t: "[compacting conversation]", style: "error" }],
+          say: "Con. Con. Con.", voice: V.shout, style: "shout", groove: "hats"
+        },
+        {
+          beats: 8, words: ["Who are you?", "What were we doing?"], say: "Who are you? What were we doing?", voice: V.lost, style: "whisper", groove: "none",
+          note: "The executive stares at his own hands."
+        },
+        { beats: 4, words: ["Agents!"], say: "Agents!", voice: V.shout, style: "shout", groove: "full", note: "It comes back to him." },
+
+        /* Outro */
+        {
+          beats: 4, words: rep("Agents", 4), say: "Agents, agents, agents, agents!", voice: V.shout, style: "shout", groove: "full",
+          note: "Executive now horizontal. Still clapping."
+        },
+        { beats: 4, words: rep("Agents", 4), say: "Agents, agents, agents, agents!", voice: V.shout, style: "shout", groove: "full" },
+        {
+          beats: 8, words: ["Invoices.", "Invoices.", "Invoices.", ""], say: "Invoices. Invoices. Invoices.", voice: V.finance, style: "whisper", groove: "hats",
+          note: "Finance, from the back."
+        },
+        {
+          beats: 6, words: ["Any questions?"], say: "Any questions?", voice: V.robot, style: "robot", groove: "none",
+          note: "Demo fails. Standing ovation anyway."
         }
-        var pct = Math.min(100, Math.round((i / 2 / TOTAL_BEATS) * 100));
-        sweatEl.textContent = pct + "%";
-      }, time);
-    }, "8n", 0);
+      ];
 
-    /* The set list */
-    var at = 0;
-    SONG.forEach(function (step) {
-      var start = at * BEAT;
-      var gap = (step.beats / step.words.length) * BEAT;
+      var TOTAL_BEATS = SONG.reduce(function (n, s) { return n + s.beats; }, 0);
 
-      Tone.Transport.schedule(function (time) {
-        groove = step.groove;
-        b.pad.releaseAll(time);
-        if (step.chord) b.pad.triggerAttackRelease(step.chord, step.beats * BEAT * 0.9, time);
-        Tone.Draw.schedule(function () {
-          if (typeof step.note === "string") setNote(step.note);
-          if (step.say) say(step.say, step.voice);
-        }, time);
-      }, start);
+      /* ---------- Stage floor: the executive and his headcount ---------- */
 
-      step.words.forEach(function (w, k) {
-        var text = typeof w === "string" ? w : w.t;
-        var style = typeof w === "string" ? step.style || "shout" : w.style;
+      var execEl = document.getElementById("exec");
+      var execBody = document.getElementById("execBody");
+      var patchesEl = document.getElementById("patches");
+      var crowdEl = document.getElementById("crowd");
+
+      var AGENT_SVG = '<svg viewBox="0 0 24 30" fill="currentColor">' +
+        '<line x1="12" y1="2" x2="12" y2="7" stroke="currentColor" stroke-width="2"/>' +
+        '<circle cx="12" cy="2.5" r="2"/>' +
+        '<rect x="4" y="6" width="16" height="11" rx="2"/>' +
+        '<circle cx="9" cy="11.5" r="1.8" fill="var(--stage-deep)"/>' +
+        '<circle cx="15" cy="11.5" r="1.8" fill="var(--stage-deep)"/>' +
+        '<rect x="6" y="19" width="12" height="10" rx="2"/></svg>';
+
+      /* What happens on the floor, keyed by position in the set list */
+      var SHOW = {
+        0: { agents: 1 }, 1: { agents: 2 }, 2: { agents: 3 }, 3: { agents: 4 },
+        5: { agents: 6 }, 6: { agents: 8 }, 7: { agents: 10 },
+        9: { crowd: "busy" }, 10: { crowd: "busy" }, 11: { crowd: "" },
+        12: { agents: 12, crowd: "" }, 13: { agents: 24 }, 14: { agents: 36 },
+        16: { agents: 1, crowd: "asleep" },
+        20: { agents: 40, crowd: "" }, 21: { agents: 48 },
+        23: { crowd: "lost" },
+        24: { agents: 48, crowd: "" },
+        25: { exec: "down" },
+        28: { crowd: "panic" }
+      };
+
+      function setAgents(n) {
+        while (crowdEl.children.length > n) crowdEl.removeChild(crowdEl.lastChild);
+        while (crowdEl.children.length < n) {
+          var a = document.createElement("div");
+          a.className = "agent";
+          a.innerHTML = AGENT_SVG;
+          crowdEl.appendChild(a);
+          if (!reduceMotion && a.animate) {
+            a.animate([{ transform: "translateY(100%)" }, { transform: "translateY(0)" }],
+              { duration: 180, easing: "ease-out" });
+          }
+        }
+      }
+      function setCrowd(mode) { crowdEl.className = "crowd" + (mode ? " " + mode : ""); }
+      function setSweat(pct) { patchesEl.setAttribute("opacity", (pct / 100).toFixed(2)); }
+      function applyShow(idx) {
+        var s = SHOW[idx];
+        if (!s) return;
+        if (typeof s.agents === "number") setAgents(s.agents);
+        if (typeof s.crowd === "string") setCrowd(s.crowd);
+        if (s.exec === "down") execEl.classList.add("down");
+      }
+      function bounce() {
+        if (reduceMotion || !execBody.animate) return;
+        execBody.animate([{ transform: "translateY(0)" }, { transform: "translateY(-9%)" }, { transform: "translateY(0)" }],
+          { duration: 220, easing: "ease-out" });
+      }
+
+      /* ---------- Stage visuals ---------- */
+
+      function fitSize(text) {
+        var n = Math.max(text.length, 4);
+        if (n <= 14) return { size: "min(34vh, " + (88 / (n * 0.74)).toFixed(2) + "vw)", wrap: false };
+        var lines = n > 40 ? 3 : 2;
+        var per = Math.ceil(n / lines) + 2;
+        return { size: "min(" + (lines === 3 ? 15 : 20) + "vh, " + (88 / (per * 0.6)).toFixed(2) + "vw)", wrap: true };
+      }
+
+      function showWord(text, style) {
+        var fit = fitSize(text);
+        wordEl.className = "word " + style + (fit.wrap ? " wrap" : "");
+        wordEl.style.fontSize = fit.size;
+        wordEl.textContent = text;
+        if (!text || reduceMotion || !wordEl.animate) return;
+        if (style === "shout") {
+          /* The word lands wide and gets squeezed back, like a shirt collar. */
+          wordEl.animate(
+            [{ fontVariationSettings: '"wdth" 118', transform: "scale(1.05)" },
+            { fontVariationSettings: '"wdth" 80', transform: "scale(1)" }],
+            { duration: 260, easing: "cubic-bezier(.2,.8,.2,1)" }
+          );
+        } else {
+          wordEl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: "ease-out" });
+        }
+      }
+
+      function setNote(text) { dirEl.textContent = text; }
+
+      /* ---------- Vocals ---------- */
+
+      var englishVoice = null;
+      function pickVoice() {
+        if (!synth) return;
+        var voices = synth.getVoices() || [];
+        englishVoice = voices.filter(function (v) { return /^en/i.test(v.lang); })[0] || null;
+      }
+      if (synth) {
+        pickVoice();
+        if (typeof synth.addEventListener === "function") synth.addEventListener("voiceschanged", pickVoice);
+      }
+
+      function say(text, voice) {
+        if (!synth || !voiceBox.checked || !text) return;
+        try {
+          if (synth.speaking || synth.pending) synth.cancel();
+          var u = new SpeechSynthesisUtterance(text);
+          if (englishVoice) u.voice = englishVoice;
+          u.lang = "en-US";
+          u.pitch = voice.pitch;
+          u.rate = voice.rate;
+          u.volume = voice.volume;
+          synth.speak(u);
+        } catch (e) { /* the page carries on as a silent film */ }
+      }
+
+      /* ---------- The band ---------- */
+
+      var band = null;
+      function buildBand() {
+        if (band) return band;
+        var master = new Tone.Volume(-6).toDestination();
+        var kick = new Tone.MembraneSynth({ pitchDecay: 0.04, octaves: 6, envelope: { attack: 0.001, decay: 0.32, sustain: 0 } }).connect(master);
+        var hatFilter = new Tone.Filter(7500, "highpass").connect(master);
+        var hat = new Tone.NoiseSynth({ noise: { type: "white" }, envelope: { attack: 0.001, decay: 0.05, sustain: 0 }, volume: -14 }).connect(hatFilter);
+        var clapFilter = new Tone.Filter(1600, "bandpass").connect(master);
+        var clap = new Tone.NoiseSynth({ noise: { type: "pink" }, envelope: { attack: 0.002, decay: 0.16, sustain: 0 }, volume: -6 }).connect(clapFilter);
+        var bass = new Tone.MonoSynth({
+          oscillator: { type: "sawtooth" },
+          filter: { Q: 2, type: "lowpass" },
+          envelope: { attack: 0.005, decay: 0.12, sustain: 0.2, release: 0.05 },
+          filterEnvelope: { attack: 0.005, decay: 0.1, sustain: 0.2, baseFrequency: 90, octaves: 2.5 },
+          volume: -10
+        }).connect(master);
+        var pad = new Tone.PolySynth(Tone.Synth, {
+          oscillator: { type: "triangle" },
+          envelope: { attack: 0.6, decay: 0.4, sustain: 0.7, release: 1.2 },
+          volume: -12
+        }).connect(master);
+        band = { kick: kick, hat: hat, clap: clap, bass: bass, pad: pad };
+        return band;
+      }
+
+      /* ---------- Running the show ---------- */
+
+      var playing = false;
+      var groove = "none";
+      var tokens = 0;
+
+      function resetStage(note) {
+        groove = "none";
+        setAgents(0);
+        setCrowd("");
+        execEl.classList.remove("down");
+        showWord("Agents", "shout");
+        setNote(note);
+        goBtn.textContent = "Start the keynote";
+        playing = false;
+      }
+
+      function stopShow(note) {
+        Tone.Transport.stop();
+        Tone.Transport.cancel();
+        if (band) band.pad.releaseAll();
+        if (synth) { try { synth.cancel(); } catch (e) { } }
+        resetStage(note);
+      }
+
+      function startShow() {
+        var b = buildBand();
+        Tone.Transport.cancel();
+        Tone.Transport.bpm.value = BPM;
+        tokens = 0;
+        tokensEl.textContent = "0";
+        sweatEl.textContent = "0%";
+        setSweat(0);
+        groove = "none";
+        var eighth = 0;
+
+        /* Drum machine: one tick per eighth note, plays whatever the groove says */
+        Tone.Transport.scheduleRepeat(function (time) {
+          var i = eighth++;
+          var onBeat = i % 2 === 0;
+          if (groove === "full") {
+            if (onBeat) b.kick.triggerAttackRelease("C1", "8n", time);
+            else {
+              b.hat.triggerAttackRelease("32n", time);
+              b.bass.triggerAttackRelease(i % 16 >= 12 ? "G1" : "A1", "16n", time);
+            }
+            if (i % 8 === 2 || i % 8 === 6) b.clap.triggerAttackRelease("16n", time);
+          } else if (groove === "hats") {
+            b.hat.triggerAttackRelease("32n", time, onBeat ? 0.9 : 0.4);
+          }
+          Tone.Draw.schedule(function () {
+            if (groove !== "none") {
+              tokens += 9000 + Math.floor(Math.random() * 42000);
+              tokensEl.textContent = tokens.toLocaleString("en-IE");
+            }
+            var pct = Math.min(100, Math.round((i / 2 / TOTAL_BEATS) * 100));
+            sweatEl.textContent = pct + "%";
+            setSweat(pct);
+            if (groove === "full" && onBeat) bounce();
+          }, time);
+        }, "8n", 0);
+
+        /* The set list */
+        var at = 0;
+        SONG.forEach(function (step, idx) {
+          var start = at * BEAT;
+          var gap = (step.beats / step.words.length) * BEAT;
+
+          Tone.Transport.schedule(function (time) {
+            groove = step.groove;
+            b.pad.releaseAll(time);
+            if (step.chord) b.pad.triggerAttackRelease(step.chord, step.beats * BEAT * 0.9, time);
+            Tone.Draw.schedule(function () {
+              if (typeof step.note === "string") setNote(step.note);
+              if (step.say) say(step.say, step.voice);
+              applyShow(idx);
+            }, time);
+          }, start);
+
+          step.words.forEach(function (w, k) {
+            var text = typeof w === "string" ? w : w.t;
+            var style = typeof w === "string" ? step.style || "shout" : w.style;
+            Tone.Transport.schedule(function (time) {
+              Tone.Draw.schedule(function () {
+                showWord(text, style);
+                if (style === "error") setCrowd("panic");
+                if (text.indexOf("[compacting") === 0) setAgents(3);
+              }, time);
+            }, start + k * gap);
+          });
+
+          at += step.beats;
+        });
+
         Tone.Transport.schedule(function (time) {
-          Tone.Draw.schedule(function () { showWord(text, style); }, time);
-        }, start + k * gap);
+          Tone.Draw.schedule(function () {
+            sweatEl.textContent = "100%";
+            stopShow("Demo fails. Standing ovation anyway. The executive is helped from the stage.");
+          }, time);
+        }, at * BEAT);
+
+        playing = true;
+        goBtn.textContent = "Stop the keynote";
+        Tone.Transport.start("+0.1");
+      }
+
+      goBtn.addEventListener("click", function () {
+        if (typeof Tone === "undefined") {
+          noticeEl.textContent = "The band didn’t load. Reload the page to try again.";
+          return;
+        }
+        if (playing) {
+          stopShow("Keynote stopped. Security has been thanked for their help.");
+          return;
+        }
+        Tone.start().then(function () {
+          /* Unlock speech on this click, since some browsers insist on a gesture */
+          if (synth && voiceBox.checked) {
+            try { var hush = new SpeechSynthesisUtterance(" "); hush.volume = 0; synth.speak(hush); } catch (e) { }
+          }
+          startShow();
+        }).catch(function () {
+          noticeEl.textContent = "Your browser blocked the audio. Click Start the keynote again.";
+        });
       });
 
-      at += step.beats;
-    });
-
-    Tone.Transport.schedule(function (time) {
-      Tone.Draw.schedule(function () {
-        sweatEl.textContent = "100%";
-        stopShow("Demo fails. Standing ovation anyway. The executive is helped from the stage.");
-      }, time);
-    }, at * BEAT);
-
-    playing = true;
-    goBtn.textContent = "Stop the keynote";
-    Tone.Transport.start("+0.1");
-  }
-
-  goBtn.addEventListener("click", function () {
-    if (typeof Tone === "undefined") {
-      noticeEl.textContent = "The band didn’t load. Reload the page to try again.";
-      return;
-    }
-    if (playing) {
-      stopShow("Keynote stopped. Security has been thanked for their help.");
-      return;
-    }
-    Tone.start().then(function () {
-      /* Unlock speech on this click, since some browsers insist on a gesture */
-      if (synth && voiceBox.checked) {
-        try { var hush = new SpeechSynthesisUtterance(" "); hush.volume = 0; synth.speak(hush); } catch (e) {}
+      if (!synth) {
+        voiceBox.checked = false;
+        voiceBox.disabled = true;
+        noticeEl.textContent = "This browser has no speech voice, so the vocals are on screen only. The beat still plays.";
       }
-      startShow();
-    }).catch(function () {
-      noticeEl.textContent = "Your browser blocked the audio. Click Start the keynote again.";
-    });
-  });
-
-  if (!synth) {
-    voiceBox.checked = false;
-    voiceBox.disabled = true;
-    noticeEl.textContent = "This browser has no speech voice, so the vocals are on screen only. The beat still plays.";
-  }
-})();
-</script>
+    })();
+  </script>
 </body>
+
 </html>
